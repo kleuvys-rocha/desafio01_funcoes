@@ -89,7 +89,6 @@ def cadastrar_usuario(*, nome: str, data_nascimento: str, CPF: str, endereco: st
 
     return 1
 
-
 #def cadastrar_conta():
 
 def depositar(valor, saldo, extrato, /): # arametros posicionais obrigatorio
