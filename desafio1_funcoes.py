@@ -15,7 +15,15 @@ extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
 
+
 #usuario
+
+clientes = [{}]
+
+# contas
+
+contas = [{}]
+
 """
 cliente = [
     usuario1 = {
@@ -47,21 +55,44 @@ contas = [
   de usuarios buscando o nº cpf informado p/ cada usuario
   da lista
 """
-cliente = [{}]
+clientes = [
+    dict.fromkeys([
+        'nome',
+        'data_nascimento',
+        'CPF',
+        'endereco'
+        ], '')
+]
 
-# reescrevendo este programa com uso de funções
-#criar funções para cada operação
-
-
-
+"""
+        nome: ,
+        data_nascimento: ,
+        cpf: string(apenas numeros),
+        endereço: string (logradouro, nº - bairro - cidade/sigla estado)
+"""
 
 #                           FUNÇÕES
 
-#criar usuario
-#criar conta-corrente
+def cadastrar_usuario(*, nome: str, data_nascimento: str, CPF: str, endereco: str):
+    #check if cpf already exists
+
+    for usuario in clientes:
+        if usuario['cpf'] == CPF:
+            return
+    
+    clientes.append({
+        'nome': nome,
+        'data_nascimento': data_nascimento,
+        'cpf': CPF,
+        'endereco': endereco
+    })
+
+    return 1
 
 
-def depositar(valor, saldo, extrato, /):
+#def cadastrar_conta():
+
+def depositar(valor, saldo, extrato, /): # arametros posicionais obrigatorio
     if valor > 0:
         saldo += valor
         extrato += f"Depósito: R$ {valor:.2f}\n"
@@ -69,15 +100,26 @@ def depositar(valor, saldo, extrato, /):
     else:
         return
 
-def sacar(*, valor, saldo, limite, QtdSaque, extrato, /): # parametros posicionais obrigatorio
-    if valor > 0 and valor <= saldo:
+def sacar(*, valor, saldo, limite, QtdSaque, extrato): # parametros nomeados obrigatorio
+    if(valor>limite): 
+        print('o valor é maior que o limite por operação')
+        return
+    if(QtdSaque >= LIMITE_SAQUES):
+        print('Você ja atingiu a quantidade de saques diário. Faça upgrade do seu plano para saques ilimitados :)')
+        return
+    if(valor <= 0):
+        print('O valor precisa ser maior do que 0')
+        return 
+    if valor <= saldo:
         saldo -= valor
         QtdSaque += 1
         extrato += f"Saque: R$ {valor:.2f}\n"
+        return 'success'
     else:
+        print('Saldo insuficiente')
         return
 
-def emitir_extrato(saldo, /, *, extrato): # parametros nomeados obrigatorio
+def emitir_extrato(saldo, /, *, extrato): # parametros posicionais e nomeados obrigatorio
     print("\n================ EXTRATO ================")
     print("Não foram realizadas movimentações." if not extrato else extrato) # é um if ternário 
     print(f"\nSaldo: R$ {saldo:.2f}")
@@ -106,28 +148,13 @@ while True:
     elif opcao == "s":
         valor = float(input("Informe o valor do saque: "))
 
-        excedeu_saldo = valor > saldo
-
-        excedeu_limite = valor > limite
-
-        excedeu_saques = numero_saques >= LIMITE_SAQUES
-
-        if excedeu_saldo:
-            print("Operação falhou! Você não tem saldo suficiente.")
-
-        elif excedeu_limite:
-            print("Operação falhou! O valor do saque excede o limite.")
-
-        elif excedeu_saques:
-            print("Operação falhou! Número máximo de saques excedido.")
-
-        elif (sacar(valor, saldo, LIMITE_SAQUES, extrato)):
+        if (sacar(valor=valor, saldo=saldo, limite=LIMITE_SAQUES, QtdSaque=numero_saques ,extrato=extrato)):
             print("Saque realizado com sucesso!")
         else:
-            print("Operação falhou! O valor informado é inválido.")
+            continue
 
     elif opcao == "e":
-        emitir_extrato(extrato=extrato, saldo=saldo)
+        emitir_extrato(saldo, extrato=extrato)
 
     elif opcao == "q":
         break
