@@ -1,5 +1,7 @@
 menu = """
 
+[u] Cadastrar usuairo
+[c] Cadastar conta
 [d] Depositar
 [s] Sacar
 [e] Extrato
@@ -74,8 +76,8 @@ clientes = [
 #                           FUNÇÕES
 
 def cadastrar_usuario(*, nome: str, data_nascimento: str, CPF: str, endereco: str):
-    #check if cpf already exists
 
+    #check if cpf already exists
     for usuario in clientes:
         if usuario['cpf'] == CPF:
             return
@@ -130,10 +132,23 @@ def emitir_extrato(saldo, /, *, extrato): # parametros posicionais e nomeados ob
 
 
 
-
 while True:
 
     opcao = input(menu)
+
+    if opcao == "u":
+        print("### Cadastro de usuario. Preencha as informações abaixo ###")
+        user_name = str(input("Informe o nome: "))
+        user_birth = str(input("Informe a data de nascimento: "))
+        user_cpf = str(input("Informe o cpf: "))
+        user_address = str(input("Informe o endereço: "))
+
+        isUserCreated = cadastrar_usuario(nome = user_name, data_nascimento=user_birth, CPF=user_cpf, endereco=user_address)
+        if isUserCreated:
+            print("Usuario já possui cadastro !")
+        else:
+            print("Usuario criado com sucesso")
+
 
     if opcao == "d":
         valor = float(input("Informe o valor do depósito: "))
