@@ -61,7 +61,7 @@ clientes = [
     dict.fromkeys([
         'nome',
         'data_nascimento',
-        'CPF',
+        'cpf',
         'endereco'
         ], '')
 ]
@@ -89,7 +89,7 @@ def cadastrar_usuario(*, nome: str, data_nascimento: str, CPF: str, endereco: st
         'endereco': endereco
     })
 
-    return 1
+    return "success"
 
 #def cadastrar_conta():
 
@@ -144,7 +144,7 @@ while True:
         user_address = str(input("Informe o endereço: "))
 
         isUserCreated = cadastrar_usuario(nome = user_name, data_nascimento=user_birth, CPF=user_cpf, endereco=user_address)
-        if isUserCreated:
+        if not isUserCreated:
             print("Usuario já possui cadastro !")
         else:
             print("Usuario criado com sucesso")
@@ -175,4 +175,7 @@ while True:
 
     else:
         print("Operação inválida, selecione novamente a operação desejada.")
+
+
+print(clientes)
 
